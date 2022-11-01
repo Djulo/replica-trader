@@ -35,7 +35,7 @@ while True:
         try:
             amount = order['amount'] / factor
             order = account.createOrder(order['symbol'], order['type'], order['side'], amount, ...)
-			pprint(order)
+            pprint(order)
         except:
             pass
 
