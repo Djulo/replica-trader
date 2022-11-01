@@ -1,6 +1,7 @@
 import ccxt
 from config import replica, account
 import time
+import pprint
 
 exchange_id = 'ftx'
 exchange_class = getattr(ccxt, exchange_id)
