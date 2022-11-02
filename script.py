@@ -35,7 +35,7 @@ while True:
         if len(orders_to_create) > 0:
             since = orders_to_create[-1]['timestamp']
 
-        for order in orders:
+        for order in orders_to_create:
             amount = order['amount'] / factor
             order = account.create_order(order['symbol'], order['type'], order['side'], amount, ...)
 
