@@ -19,10 +19,8 @@ account = ccxt.ftx({
     }
 })
 
-since = time.time() * 1000 - 1000 * 60 * 60
-
-orders = replica.fetch_orders()
-account_orders = [x for x in orders if x['timestamp'] < since]
+since = None
+account_orders = replica.fetch_orders()
 
 while True:
     try:
