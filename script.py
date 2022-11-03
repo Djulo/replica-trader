@@ -28,10 +28,16 @@ while True:
         account_balance = account.fetch_balance()['USD']['free']
         factor = replica_balance / account_balance
 
-        orders = replica.fetch_orders(since=since)
+        replica_positions = replica.fetch_positions()
+        replica_positions = replica.index_by(replica_positions, 'symbol')
 
+        account_positions = replica.fetch_positions()
+        account_positions = account.index_by(account_positions, 'symbol')
+
+        orders = replica.fetch_orders(since=since)
         orders_to_create = [x for x in orders if x not in account_orders]
         orders_to_create = replica.sort_by(orders_to_create, 'timestamp')
+
         if len(orders_to_create) > 0:
             since = orders_to_create[-1]['timestamp']
 
@@ -42,7 +48,14 @@ while True:
             market = account.market(order['symbol'])
             if amount < market['limits']['amount']['min']:
                 amount = market['limits']['amount']['min']
-                
+
+            replica_position = replica_positions.get(order['symbol'], None)
+            account_position = account_positions.get(order['symbol'], None)
+            if replica_position is not None and \
+               account_position is not None and \
+               order['amount'] == replica_position['info']['size']:
+                amount = account_position['info']['size']
+
             order = account.create_order(order['symbol'], order['type'], order['side'], amount, ...)
 
         account_orders.extend(orders_to_create)
