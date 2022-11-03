@@ -37,6 +37,8 @@ while True:
 
         for order in orders_to_create:
             amount = order['amount'] / factor
+            if amount < 1:
+                amount = 1
             order = account.create_order(order['symbol'], order['type'], order['side'], amount, ...)
 
         account_orders.extend(orders_to_create)
