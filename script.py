@@ -26,14 +26,9 @@ async def place_order(replica, account, order):
         positions = await account.fetch_positions()
         account_position = next((x for x in positions if x['symbol'] == order['symbol'] and x['contracts'] > 0), None)
 
-        if (replica_position is not None and
-            account_position is not None and
-            replica_position['contracts'] == order['amount']) or \
-                (replica_position is None and
-                 account_position is not None):
+        if replica_position is None and account_position is not None:
             amount = account_position['contracts']
-        elif replica_position is None and \
-                account_position is None:
+        elif replica_position is None and account_position is None:
             return
 
         await account.create_order(order['symbol'], order['type'], order['side'], amount, ...)
